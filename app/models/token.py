@@ -12,4 +12,4 @@ class Token(db.Model):
     revoked = db.Column(db.Integer)  # id of the user who revokes this token
 
     def __repr__(self):
-        return f"<partners {self.id}>"
+        return f"<Token {self.id}>"

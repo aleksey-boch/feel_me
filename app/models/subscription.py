@@ -11,4 +11,3 @@ class Subscription(db.Model):
 
     def __repr__(self):
         return f"<Subscription {self.id}>"
-

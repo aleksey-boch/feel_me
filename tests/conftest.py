@@ -6,7 +6,6 @@ from app import create_app, db
 @pytest.fixture()
 def app():
     app = create_app(config_class='config.TestingConfig')
-    # app.config.from_object('config.TestingConfig')
 
     # other setup can go here
     with app.app_context():

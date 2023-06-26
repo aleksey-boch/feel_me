@@ -14,9 +14,6 @@ class LoginSchema(ma.SQLAlchemySchema):
     psw = ma.String(required=True)
 
 
-# Protect a route with jwt_required, which will kick out requests
-# without a valid JWT present.
-
 @api.route("/token", methods=["POST"])
 def get_token():
     data = LoginSchema().load(request.json.get("user", None))
@@ -44,9 +41,11 @@ def get_token():
     if not result:
         abort(500, 'Something went wrong. Our programmers have been notified.')
 
-    jwt_token = create_access_token({
-        'token_id': token.id,
-        'websites_name': partner.websites_name,
-    })
+    jwt_token = create_access_token(
+        partner.id,
+        additional_claims={
+            'token_id': token.id,
+            'websites_name': partner.websites_name,
+        })
 
     return make_response(jwt_token, 200)
