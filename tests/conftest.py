@@ -1,19 +1,22 @@
 import pytest
 
-from app import create_app
+from app import create_app, db
 
 
 @pytest.fixture()
 def app():
-    app = create_app()
-    app.config.from_object('config.TestingConfig')
+    app = create_app(config_class='config.TestingConfig')
+    # app.config.from_object('config.TestingConfig')
 
     # other setup can go here
-    # db.
+    with app.app_context():
+        db.create_all()
 
     yield app
 
     # clean up / reset resources here
+    with app.app_context():
+        db.drop_all()
 
 
 @pytest.fixture()

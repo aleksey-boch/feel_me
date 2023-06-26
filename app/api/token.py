@@ -1,8 +1,12 @@
-from flask import request, make_response
+from datetime import datetime
+
+from flask import request, make_response, abort
 from flask_jwt_extended import create_access_token
 
 from app.api import api, ma
+from app.models import insert_or_update
 from app.models.partner import Partner
+from app.models.token import Token
 
 
 class LoginSchema(ma.SQLAlchemySchema):
@@ -25,10 +29,24 @@ def get_token():
             {'WWW-Authenticate': 'Basic realm ="User does not exist !!"'}
         )
 
-    token = create_access_token(
-        identity={
-            'websites_name': partner.websites_name,
-        }
-    )
+    old_token = Token.query.filter_by(
+        partner_id=partner.id
+    ).order_by(Token.created_at.desc()).first()
+    if old_token:
+        old_token.revoked = partner.id
+        old_token.expired_at = datetime.utcnow
+        result, response = insert_or_update(old_token)
+        if not result:
+            abort(500, 'Something went wrong. Our programmers have been notified.')
 
-    return make_response(token, 200)
+    token = Token(partner_id=partner.id)
+    result, response = insert_or_update(token)
+    if not result:
+        abort(500, 'Something went wrong. Our programmers have been notified.')
+
+    jwt_token = create_access_token({
+        'token_id': token.id,
+        'websites_name': partner.websites_name,
+    })
+
+    return make_response(jwt_token, 200)

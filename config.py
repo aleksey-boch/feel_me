@@ -3,7 +3,7 @@
 import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-database_path = 'sqlite:////tmp/'
+database_path = 'sqlite:///'
 database_name = 'feel_me.db'
 
 
@@ -26,7 +26,7 @@ class TestingConfig(BaseConfig):
     """Testing configuration."""
     DEBUG = True
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = database_path + database_name + '_test'
+    SQLALCHEMY_DATABASE_URI = database_path + os.path.join(basedir, 'tmp', database_name + '_test')
     PRESERVE_CONTEXT_ON_EXCEPTION = False
 
 

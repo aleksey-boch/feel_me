@@ -1,9 +1,16 @@
-from flask_jwt_extended import create_access_token
+from app.models import insert_or_update
+from app.models.partner import Partner
 
 
 def test_get_token(client, app):
-    # with app.app_context():
-    #     token = create_access_token('2@2.com')
+    partner = Partner(
+        email='2@2.com',
+        psw='vasyaPupkin123',
+        websites_name='One_site',
+    )
+    with app.app_context():
+        insert_or_update(partner)
+
     response = client.post(
         "/api/v1/token",
         json={
@@ -11,7 +18,8 @@ def test_get_token(client, app):
                 'email': '2@2.com',
                 'psw': 'vasyaPupkin123',
             }
-        }
+        },
     )
-    assert b'<h1>Testing the Flask Application Factory Pattern</h1>' in response.data
 
+    assert response.status_code == 200
+    assert response.data is not None

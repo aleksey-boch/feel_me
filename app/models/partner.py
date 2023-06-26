@@ -11,4 +11,4 @@ class Partner(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        return f"<partners {self.id}>"
+        return f"<Partner {self.id}>"

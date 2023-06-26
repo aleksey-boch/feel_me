@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager
+from flask_migrate import Migrate
 
 from app import api
 from app.api import ma
@@ -7,6 +8,8 @@ from app.models import db
 
 # Setup the Flask-JWT-Extended extension
 jwt = JWTManager()
+# For database migrations
+migrate = Migrate()
 
 
 def create_app(config_class=None):
@@ -17,6 +20,8 @@ def create_app(config_class=None):
     db.init_app(app)
     ma.init_app(app)
     jwt.init_app(app)
+
+    # migrate.init_app(app, db)
 
     app.register_blueprint(api.api)
 
