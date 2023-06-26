@@ -8,3 +8,4 @@ ma = Marshmallow()
 # routes, which are created under the api folder. As you add more routes,
 # you should import them here so the app can pick it up.
 from app.api import subscription
+from app.api import token

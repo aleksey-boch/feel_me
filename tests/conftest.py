@@ -9,6 +9,7 @@ def app():
     app.config.from_object('config.TestingConfig')
 
     # other setup can go here
+    # db.
 
     yield app
 
