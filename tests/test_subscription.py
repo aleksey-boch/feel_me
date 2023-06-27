@@ -58,7 +58,7 @@ def test_add_subscription(client, app):
 
 
 def test_update_subscription(client, app):
-    """Subscription renewal test"""
+    """Subscription editing test"""
     user_id = 69
     user_email = '2@2.com'
     user_psw = generate_password_hash('vasyaPupkin123')

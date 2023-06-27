@@ -1,12 +1,26 @@
 FROM python:3.11
 
-ENV PYTHONUNBUFFERED=1
+ARG APP_DIR=/app
+ARG APPLICATION_PORT=8000
+ARG PATH_TO_LOG=logs
 
-RUN mkdir /code
-WORKDIR /code
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+ENV PATH=$PATH:${APP_DIR} PYTHONPATH=${APP_DIR}
 
-COPY requirements.txt /code/
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+ENV PATH_TO_LOG=${PATH_TO_LOG}
+ENV APPLICATION_PORT=${APPLICATION_PORT}
+EXPOSE ${APPLICATION_PORT}
 
-COPY . /code/
+# Specity flask app entry point
+ENV FLASK_APP=feel_me.py
+
+RUN apt-get update && apt-get install -y cron
+
+# Create app directory
+WORKDIR ${APP_DIR}
+
+# Install app dependencies
+ADD requirements.txt ${APP_DIR}
+RUN mkdir ${PATH_TO_LOG} && pip install -r requirements.txt
+ADD . ${APP_DIR}
+CMD flask run
