@@ -1,0 +1,50 @@
+Assignment: Develop an API for Partner Subscriptions
+
+FeelMe AI Project Description:
+FeelMe AI is an innovative technology designed to enhance the experience of online adult content. The system allows any adult content on the internet to become interactive by pairing it with compatible devices, such as Kiiroo sex toys. The service works via an extension that captures the actions in the adult content and translates them into signals, which are then sent to the paired devices. This allows users to feel the rhythm of the activities shown in the videos, providing a more immersive and
+interactive experience.
+The service is offered through a subscription model. Subscribers to FeelMe AI can make any adult video interactive, offering a cost-effective alternative to premium interactive porn subscriptions that have limited interactive content.
+
+Objective:
+We are planning to create a new feature that allows users to subscribe to our services through our partner websites. Your task is to design and implement an API that will be used for creating and extending subscriptions.
+
+Task Details:
+
+1. Create a Subscription:
+Develop a POST endpoint at /api/v1/subscription that creates a new subscription. 
+The endpoint should accept a JSON payload with the following fields:
+o User external ID: To identify the user on the partner website.
+o User email: This will be used to create an account on portal.feelme.com
+o Subscription information: Duration (1 month, 3 months, etc) and either the date when the subscription becomes active or the subscription expiration date.
+
+2. Extend a Subscription:
+Develop a PUT endpoint at /api/v1/subscription that extends an existing subscription. 
+The endpoint should accept a JSON payload with the following fields:
+o User external ID: To identify the user on the partner website.
+o Subscription information: Duration (1 month, 3 months, etc) and
+expiration date.
+
+Requirements:
+1. Authentication:
+API requests should be signed with shared secrets or contain some form of authentication to identify that the request has been sent by a specific partner.
+2. Data Privacy:
+The user's email should be the only personal information obtained from the partner websites.
+3. Technology:
+You're free to choose the technologies you use, with the caveat that the solution should be implemented in Python, preferably Flask (or any other framework, the use of which you can justify).
+
+Evaluation Criteria:
+1. Design:
+We're interested in how you design the system. What decisions do you make, and why?
+2. Code quality:
+Your code should be clean, readable, and maintainable.
+3. Security:
+How you handle the secure transmission and storage of sensitive data (such as email addresses).
+4. Error handling:
+How your API responds to invalid requests or system errors.
+
+Deliverables:
+1. Source code for the API.
+2. A README file that explains your design choices, how to set up, and how to use your API.
+3. (Optional) Any tests you've written for your API.
+
+Please limit your time spent on this assignment to a few hours, no need to go for perfection. We're mainly interested in getting a feel for how you think and design software.
