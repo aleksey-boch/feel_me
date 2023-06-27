@@ -1,11 +1,16 @@
+from werkzeug.security import generate_password_hash
+
 from app.models import insert_or_update
 from app.models.partner import Partner
 
 
 def test_get_token(client, app):
+    email = '2@2.com'
+    psw = 'vasyaPupkin123'
+
     partner = Partner(
-        email='2@2.com',
-        psw='vasyaPupkin123',
+        email=email,
+        psw=generate_password_hash(psw),
         websites_name='One_site',
     )
     with app.app_context():
@@ -15,8 +20,8 @@ def test_get_token(client, app):
         "/api/v1/token",
         json={
             'user': {
-                'email': '2@2.com',
-                'psw': 'vasyaPupkin123',
+                'email': email,
+                'psw': psw,
             }
         },
     )

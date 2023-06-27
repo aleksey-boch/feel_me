@@ -54,6 +54,7 @@ def update_subscription():
 
     subscription = Subscription.query.filter_by(user_id=new_subscription['user_id']).first()
     if not subscription:
+        current_app.logger.warning('Subscription for user not found. For user: %s', new_subscription['email'])
         abort(404, 'Subscription for user not found')
 
     subscription.duration = new_subscription['duration']

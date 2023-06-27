@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from flask import request, make_response, abort
+from flask import request, make_response, abort, current_app
 from flask_jwt_extended import create_access_token
+from werkzeug.security import check_password_hash
 
 from app.api import api, ma
 from app.models import insert_or_update
@@ -19,12 +20,9 @@ def get_token():
     data = LoginSchema().load(request.json.get("user", None))
 
     partner = Partner.query.filter_by(email=data['email']).first()
-    if not partner:
-        return make_response(
-            'Could not generate new token',
-            401,
-            {'WWW-Authenticate': 'Basic realm ="User does not exist !!"'}
-        )
+    if not partner or not check_password_hash(partner.psw, data['psw']):
+        current_app.logger.warning('Could not generate new token. For user: %s', data['email'])
+        abort(401, 'Could not generate new token: user does not exist or wrong password.')
 
     old_token = Token.query.filter_by(
         partner_id=partner.id

@@ -14,11 +14,13 @@ def test_index(client):
 
 def test_add_subscription(client, app):
     user_id = 69
+    email = '2@2.com'
+    psw = 'vasyaPupkin123'
 
     with app.app_context():
         partner = Partner(
-            email='2@2.com',
-            psw='vasyaPupkin123',
+            email=email,
+            psw=psw,
             websites_name='One_site',
         )
         _, partner = insert_or_update(partner)
@@ -40,7 +42,7 @@ def test_add_subscription(client, app):
         json={
             'subscription': {
                 'user_id': user_id,
-                'user_email': '2@2.com',
+                'user_email': email,
                 'duration': 111,
                 'expiration_at': datetime.datetime.now().isoformat(),
             }
@@ -53,11 +55,13 @@ def test_add_subscription(client, app):
 
 def test_update_subscription(client, app):
     user_id = 69
+    email = '2@2.com'
+    psw = 'vasyaPupkin123'
 
     with app.app_context():
         partner = Partner(
-            email='2@2.com',
-            psw='vasyaPupkin123',
+            email=email,
+            psw=psw,
             websites_name='One_site',
         )
         _, partner = insert_or_update(partner)
@@ -79,7 +83,7 @@ def test_update_subscription(client, app):
         json={
             'subscription': {
                 'user_id': user_id,
-                'user_email': '2@2.com',
+                'user_email': email,
                 'duration': 111,
                 'expiration_at': datetime.datetime.now().isoformat(),
             }

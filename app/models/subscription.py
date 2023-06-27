@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from app.models import db
 
 
@@ -8,6 +10,7 @@ class Subscription(db.Model):
     user_email = db.Column(db.String(255))
     duration = db.Column(db.Integer)
     expiration_at = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return f"<Subscription {self.id}>"
