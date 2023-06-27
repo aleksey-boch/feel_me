@@ -5,6 +5,7 @@ from app.models.partner import Partner
 
 
 def test_get_token(client, app):
+    """Token generation test for partner site"""
     email = '2@2.com'
     psw = 'vasyaPupkin123'
 

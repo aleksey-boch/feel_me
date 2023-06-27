@@ -10,6 +10,7 @@ from config import config_dict
 
 # Setup the Flask-JWT-Extended extension
 jwt = JWTManager()
+
 # For database migrations
 migrate = Migrate()
 

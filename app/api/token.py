@@ -17,6 +17,7 @@ class LoginSchema(ma.SQLAlchemySchema):
 
 @api.route("/token", methods=["POST"])
 def get_token():
+    """Handler for generating a token for a partner site."""
     data = LoginSchema().load(request.json.get("user", None))
 
     partner = Partner.query.filter_by(email=data['email']).first()
@@ -24,9 +25,8 @@ def get_token():
         current_app.logger.warning('Could not generate new token. For user: %s', data['email'])
         abort(401, 'Could not generate new token: user does not exist or wrong password.')
 
-    old_token = Token.query.filter_by(
-        partner_id=partner.id
-    ).order_by(Token.created_at.desc()).first()
+    # revoke the old one - when issuing a new token.
+    old_token = Token.query.filter_by(partner_id=partner.id).order_by(Token.created_at.desc()).first()
     if old_token:
         old_token.revoked = partner.id
         old_token.expired_at = datetime.utcnow
@@ -44,6 +44,7 @@ def get_token():
         additional_claims={
             'token_id': token.id,
             'websites_name': partner.websites_name,
-        })
+        },
+    )
 
     return make_response(jwt_token, 200)

@@ -5,6 +5,8 @@ from app import create_app, db
 
 @pytest.fixture()
 def app():
+    """Application Initialization Fixture"""
+
     app = create_app(config_key='testing')
 
     # other setup can go here
@@ -20,6 +22,7 @@ def app():
 
 @pytest.fixture()
 def client(app):
+    """Fixture REST API client"""
     return app.test_client()
 
 

@@ -1,4 +1,6 @@
 def test_register(client, app):
+    """New partner registration form test"""
+
     email = '2@2.com'
     psw = 'vasyaPupkin123'
 
@@ -10,9 +12,8 @@ def test_register(client, app):
             'websites_name': email,
             'email': email,
             'psw': psw,
-
         },
-        headers={'Content-Type': 'multipart/form-data'}
+        headers={'Content-Type': 'multipart/form-data'},
     )
 
     assert response.status_code == 200

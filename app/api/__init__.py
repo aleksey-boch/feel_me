@@ -1,7 +1,7 @@
 from functools import wraps
 
 from flask import Blueprint
-from flask import make_response
+from flask import abort, current_app
 from flask_jwt_extended import get_jwt
 from flask_jwt_extended import verify_jwt_in_request
 from flask_marshmallow import Marshmallow
@@ -14,8 +14,7 @@ ma = Marshmallow()
 
 
 # Here is a custom decorator that verifies the JWT is present in the request,
-# as well as insuring that the JWT has a claim indicating that this user is
-# an administrator
+# as well as insuring that the JWT has a claim indicating that this token is valid
 def token_required():
     def wrapper(fn):
         @wraps(fn)
@@ -24,7 +23,8 @@ def token_required():
             claims = get_jwt()
 
             if not all((claims.get('token_id'), claims.get('websites_name'))):
-                return make_response('Token not valid', 403)
+                current_app.logger.error('Token not valid: %s', str(claims))
+                return abort(403, 'The token is wrong')
 
             token = Token.query.filter_by(id=claims['token_id']).first()
             partner = Partner.query.filter_by(websites_name=claims['websites_name']).first()
@@ -32,7 +32,8 @@ def token_required():
             if all((token, partner)) and token.partner_id == partner.id:
                 return fn(*args, **kwargs)
             else:
-                return make_response('Token not valid', 403)
+                current_app.logger.error('Token not valid: %s', str(claims))
+                return abort(403, 'Token not valid')
 
         return decorator
 

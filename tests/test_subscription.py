@@ -10,11 +10,13 @@ from app.models.token import Token
 
 
 def test_index(client):
+    """Application Minimum Health Test"""
     response = client.get("/")
     assert b'<!DOCTYPE html>\n<html lang="en"' in response.data
 
 
 def test_add_subscription(client, app):
+    """Test for adding a new subscription"""
     user_id = 69
     user_email = '2@2.com'
     user_psw = generate_password_hash('vasyaPupkin123')
@@ -35,7 +37,7 @@ def test_add_subscription(client, app):
             additional_claims={
                 'token_id': token.id,
                 'websites_name': partner.websites_name,
-            }
+            },
         )
 
     response = client.post(
@@ -56,6 +58,7 @@ def test_add_subscription(client, app):
 
 
 def test_update_subscription(client, app):
+    """Subscription renewal test"""
     user_id = 69
     user_email = '2@2.com'
     user_psw = generate_password_hash('vasyaPupkin123')
@@ -77,7 +80,7 @@ def test_update_subscription(client, app):
             additional_claims={
                 'token_id': token.id,
                 'websites_name': websites_name,
-            }
+            },
         )
 
         subscription = Subscription(
