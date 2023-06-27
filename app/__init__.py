@@ -1,9 +1,10 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 
 from app import api
 from app.api import ma
+from app.main import main
 from app.models import db
 from config import config_dict
 
@@ -25,12 +26,13 @@ def create_app(config_key=None):
     ma.init_app(app)
     jwt.init_app(app)
 
-    # migrate.init_app(app, db)
+    migrate.init_app(app, db)
 
     app.register_blueprint(api.api)
+    app.register_blueprint(main)
 
     @app.route('/', methods=['GET', 'POST'])
     def index():
-        return '<h1>Testing the Flask Application Factory Pattern</h1>'
+        return render_template('index.html')
 
     return app

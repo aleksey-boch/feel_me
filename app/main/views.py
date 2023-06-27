@@ -1,17 +1,28 @@
-from flask import request, jsonify
-from flask_jwt_extended import create_access_token
+from flask import render_template, request, abort, flash, redirect, url_for
 
 from app.main import main
+from app.models import insert_or_update
+from app.models.partner import Partner
 
 
-@main.route("/login", methods=["POST"])
-def login():
-    # Create a route to authenticate your users and return JWTs. The
-    # create_access_token() function is used to actually generate the JWT.
-    username = request.json.get("username", None)
-    password = request.json.get("password", None)
-    if username != "test" or password != "test":
-        return jsonify({"msg": "Bad username or password"}), 401
+@main.route('/register', methods=['POST', 'GET'])
+def register():
+    if request.method == 'POST':
+        login = request.form.get('login', None)
+        password = request.form.get('password', None)
+        if login != '2@2.com' or password != 'vasyaPupkin123':
+            return abort(401, {'msg': 'Bad username or password'})
 
-    access_token = create_access_token(identity=username)
-    return jsonify(access_token=access_token)
+        partner = Partner(
+            email=request.form.get('email'),
+            psw=request.form.get('psw'),
+            websites_name=request.form.get('websites_name'),
+        )
+        result, partner = insert_or_update(partner)
+        if not result:
+            flash('Something went wrong. Our programmers have been notified.')
+            return redirect(url_for('register'))
+
+        flash(f'Partner successfully added: {partner}')
+
+    return render_template('register.html')

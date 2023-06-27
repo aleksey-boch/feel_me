@@ -1,6 +1,7 @@
 import datetime
 
 from flask_jwt_extended import create_access_token
+from werkzeug.security import generate_password_hash
 
 from app.models import insert_or_update
 from app.models.partner import Partner
@@ -10,13 +11,13 @@ from app.models.token import Token
 
 def test_index(client):
     response = client.get("/")
-    assert b'<h1>Testing the Flask Application Factory Pattern</h1>' in response.data
+    assert b'<!DOCTYPE html>\n<html lang="en"' in response.data
 
 
 def test_add_subscription(client, app):
     user_id = 69
     user_email = '2@2.com'
-    user_psw = 'vasyaPupkin123'
+    user_psw = generate_password_hash('vasyaPupkin123')
 
     with app.app_context():
         partner = Partner(
@@ -57,7 +58,7 @@ def test_add_subscription(client, app):
 def test_update_subscription(client, app):
     user_id = 69
     user_email = '2@2.com'
-    user_psw = 'vasyaPupkin123'
+    user_psw = generate_password_hash('vasyaPupkin123')
     websites_name = 'One_site'
 
     with app.app_context():
