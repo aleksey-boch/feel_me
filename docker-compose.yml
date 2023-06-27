@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:12
+    container_name: postgres_db_free_me
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+      - ./sql:/sql/
+    env_file:
+      - env.template
+    ports:
+      - 5434:5432
+
+  web:
+    container_name: free_me
+    image: free_me-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    environment:
+      ENV: develop
+
+volumes:
+  postgres_data:
