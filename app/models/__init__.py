@@ -11,7 +11,7 @@ def db_persist(func):
         response = func(*args, **kwargs)
         try:
             db.session.commit()
-            current_app.logger.info("success calling db func: " + func.__name__)
+            current_app.logger.debug("success calling db func: " + func.__name__)
             return True, response
 
         except SQLAlchemyError as e:

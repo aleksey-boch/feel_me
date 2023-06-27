@@ -4,6 +4,7 @@ from flask_jwt_extended import create_access_token
 
 from app.models import insert_or_update
 from app.models.partner import Partner
+from app.models.subscription import Subscription
 from app.models.token import Token
 
 
@@ -14,13 +15,13 @@ def test_index(client):
 
 def test_add_subscription(client, app):
     user_id = 69
-    email = '2@2.com'
-    psw = 'vasyaPupkin123'
+    user_email = '2@2.com'
+    user_psw = 'vasyaPupkin123'
 
     with app.app_context():
         partner = Partner(
-            email=email,
-            psw=psw,
+            email=user_email,
+            psw=user_psw,
             websites_name='One_site',
         )
         _, partner = insert_or_update(partner)
@@ -42,7 +43,7 @@ def test_add_subscription(client, app):
         json={
             'subscription': {
                 'user_id': user_id,
-                'user_email': email,
+                'user_email': user_email,
                 'duration': 111,
                 'expiration_at': datetime.datetime.now().isoformat(),
             }
@@ -55,14 +56,15 @@ def test_add_subscription(client, app):
 
 def test_update_subscription(client, app):
     user_id = 69
-    email = '2@2.com'
-    psw = 'vasyaPupkin123'
+    user_email = '2@2.com'
+    user_psw = 'vasyaPupkin123'
+    websites_name = 'One_site'
 
     with app.app_context():
         partner = Partner(
-            email=email,
-            psw=psw,
-            websites_name='One_site',
+            email=user_email,
+            psw=user_psw,
+            websites_name=websites_name,
         )
         _, partner = insert_or_update(partner)
 
@@ -73,23 +75,18 @@ def test_update_subscription(client, app):
             partner.id,
             additional_claims={
                 'token_id': token.id,
-                'websites_name': partner.websites_name,
+                'websites_name': websites_name,
             }
         )
 
-    response = client.post(
-        "/api/v1/subscription",
-        headers={'Authorization': f'Bearer {jwt_token}'},
-        json={
-            'subscription': {
-                'user_id': user_id,
-                'user_email': email,
-                'duration': 111,
-                'expiration_at': datetime.datetime.now().isoformat(),
-            }
-        },
-    )
-    assert response.status_code == 200
+        subscription = Subscription(
+            partner_id=partner.id,
+            user_id=user_id,
+            user_email=user_email,
+            duration=111,
+            expiration_at=datetime.datetime.now(),
+        )
+        _, subscription = insert_or_update(subscription)
 
     response = client.put(
         "/api/v1/subscription",
