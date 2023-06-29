@@ -6,7 +6,6 @@ from flask_jwt_extended import get_jwt
 from flask_jwt_extended import verify_jwt_in_request
 from flask_marshmallow import Marshmallow
 
-from app.models.partner import Partner
 from app.models.token import Token
 
 api = Blueprint('api', __name__, url_prefix='/api/v1')
@@ -22,14 +21,16 @@ def token_required():
             verify_jwt_in_request()
             claims = get_jwt()
 
-            if not all((claims.get('token_id'), claims.get('websites_name'))):
+            if not all((claims.get('token_id'), claims.get('partner_id'))):
                 current_app.logger.error('Token not valid: %s', str(claims))
                 return abort(403, 'The token is wrong')
 
             token = Token.query.filter_by(id=claims['token_id']).first()
-            partner = Partner.query.filter_by(websites_name=claims['websites_name']).first()
-
-            if all((token, partner)) and token.partner_id == partner.id:
+            if token and all((
+                    token.revoked is None,
+                    token.expired_at is None,  # ToDo check is expired_at < current datatime
+                    token.partner_id == claims['partner_id'],
+            )):
                 return fn(*args, **kwargs)
             else:
                 current_app.logger.error('Token not valid: %s', str(claims))

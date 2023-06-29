@@ -36,7 +36,7 @@ def test_add_subscription(client, app):
             partner.id,
             additional_claims={
                 'token_id': token.id,
-                'websites_name': partner.websites_name,
+                'partner_id': partner.id,
             },
         )
 
@@ -79,7 +79,7 @@ def test_update_subscription(client, app):
             partner.id,
             additional_claims={
                 'token_id': token.id,
-                'websites_name': websites_name,
+                'partner_id': partner.id,
             },
         )
 

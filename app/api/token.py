@@ -43,7 +43,7 @@ def get_token():
         partner.id,
         additional_claims={
             'token_id': token.id,
-            'websites_name': partner.websites_name,
+            'partner_id': partner.id,
         },
     )
 
