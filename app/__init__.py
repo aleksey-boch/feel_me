@@ -1,12 +1,14 @@
 from flask import Flask, render_template
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
+from reactpy.backend.flask import configure
 
 from app import api
 from app.api import ma
 from app.main import main
 from app.models import db
 from config import config_dict
+from app.front.index import index_react
 
 # Setup the Flask-JWT-Extended extension
 jwt = JWTManager()
@@ -31,6 +33,8 @@ def create_app(config_key=None):
 
     app.register_blueprint(api.api)
     app.register_blueprint(main)
+
+    configure(app, index_react)
 
     @app.route('/', methods=['GET', 'POST'])
     def index():
